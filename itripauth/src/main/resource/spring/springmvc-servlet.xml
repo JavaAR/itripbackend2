@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+	   http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+       http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+    <context:component-scan base-package="cn.itrip.auth.controller"/>
+    <mvc:default-servlet-handler/>
+    <!--声明使用mvc注解-->
+    <mvc:annotation-driven>
+        <!--配置消息转换器-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>text/plain;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorParameter" value="true" />
+        <property name="defaultContentType" value="text/html" />
+        <property name="mediaTypes">
+            <map>
+                <entry key="html" value="text/html; charset=UTF-8" />
+                <entry key="json" value="application/json; charset=UTF-8" />
+            </map>
+        </property>
+    </bean>
+
+</beans>

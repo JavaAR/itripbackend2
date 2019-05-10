@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.hotelorder.ItripHotelOrderMapper">
+
+
+    <select id="getItripHotelOrderRoomInfoById" resultType="cn.itrip.beans.vo.order.ItripPersonalOrderRoomVO" >
+        select
+            o.id AS id,
+            o.hotelId AS hotelId,
+            o.hotelName AS hotelName,
+            h.hotelLevel AS hotelLevel,
+            h.address AS address,
+            o.roomId AS roomId,
+            r.roomTitle AS roomTitle,
+            r.roomBedTypeId AS roomBedTypeId,
+            o.count AS count,
+            o.bookingDays AS bookingDays,
+            o.checkInDate AS checkInDate,
+            o.checkOutDate AS checkOutDate,
+            o.specialRequirement AS specialRequirement,
+            o.linkUserName AS linkUserName,
+            o.payAmount AS payAmount,
+            r.payType AS roomPayType,
+            d.name as roomBedTypeName,
+            r.isHavingBreakfast as isHavingBreakfast,
+            dayofweek(o.checkInDate) as checkInWeek,
+            dayofweek(o.checkOutDate) as checkOutWeek
+        from itrip_hotel_order o,itrip_hotel h,itrip_hotel_room r,itrip_label_dic d
+        <trim prefix="where" prefixOverrides="and | or">
+            o.hotelId=h.id and o.roomId=r.id and d.id=r.roomBedTypeId
+            <if test="id != null">
+                and o.id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripHotelOrderById" resultType="cn.itrip.beans.pojo.ItripHotelOrder" >
+        select
+                id as id,
+                userId as userId,
+                orderType as orderType,
+                orderNo as orderNo,
+                tradeNo as tradeNo,
+                hotelId as hotelId,
+                hotelName as hotelName,
+                roomId as roomId,
+                count as count,
+                bookingDays as bookingDays,
+                checkInDate as checkInDate,
+                checkOutDate as checkOutDate,
+                orderStatus as orderStatus,
+                payAmount as payAmount,
+                payType as payType,
+                noticePhone as noticePhone,
+                noticeEmail as noticeEmail,
+                specialRequirement as specialRequirement,
+                isNeedInvoice as isNeedInvoice,
+                invoiceType as invoiceType,
+                invoiceHead as invoiceHead,
+                linkUserName as linkUserName,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy,
+                bookType as bookType
+        from itrip_hotel_order
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="getOrderListByMap" resultType="cn.itrip.beans.vo.order.ItripListHotelOrderVO" parameterType="java.util.Map">
+        select
+        id as id,
+        orderType as orderType,
+        orderNo as orderNo,
+        hotelId as hotelId,
+        hotelName as hotelName,
+        orderStatus as orderStatus,
+        count as count,
+        checkInDate as checkInDate,
+        payAmount as payAmount,
+        payType as payType,
+        linkUserName as linkUserName,
+        creationDate as creationDate
+        from itrip_hotel_order
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="userId != null and userId!=''">
+                and userId=#{userId}
+            </if>
+            <if test="orderType != null">
+                and orderType=#{orderType}
+            </if>
+            <if test="orderNo != null and orderNo!=''">
+                and orderNo like CONCAT ('%',#{orderNo},'%')
+            </if>
+            <if test="hotelId != null and hotelId!=''">
+                and hotelId=#{hotelId}
+            </if>
+            <if test="hotelName != null and hotelName!=''">
+                and hotelName=#{hotelName}
+            </if>
+            <if test="checkInDate != null and checkInDate!=''">
+                and checkInDate=#{checkInDate}
+            </if>
+            <if test="orderStatus != null">
+                and orderStatus=#{orderStatus}
+            </if>
+            <if test="payAmount != null and payAmount!=''">
+                and payAmount=#{payAmount}
+            </if>
+            <if test="linkUserName != null and linkUserName != ''">
+                and linkUserName like CONCAT ('%',#{linkUserName},'%')
+            </if>
+            <if test="startDate != null and startDate!=''">
+                and creationDate &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate!=''">
+                and creationDate &lt;= #{endDate}
+            </if>
+        </trim>
+        order by creationDate desc
+        <if test="beginPos != null and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getOrderCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_hotel_order
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="userId != null and userId!=''">
+                and userId=#{userId}
+            </if>
+            <if test="orderType != null">
+                and orderType=#{orderType}
+            </if>
+            <if test="orderNo != null and orderNo!=''">
+                and orderNo like CONCAT ('%',#{orderNo},'%')
+            </if>
+            <if test="hotelId != null and hotelId!=''">
+                and hotelId=#{hotelId}
+            </if>
+            <if test="hotelName != null and hotelName!=''">
+                and hotelName=#{hotelName}
+            </if>
+            <if test="checkInDate != null and checkInDate!=''">
+                and checkInDate=#{checkInDate}
+            </if>
+            <if test="orderStatus != null">
+                and orderStatus=#{orderStatus}
+            </if>
+            <if test="payAmount != null and payAmount!=''">
+                and payAmount=#{payAmount}
+            </if>
+            <if test="linkUserName != null and linkUserName != ''">
+                and linkUserName like CONCAT ('%',#{linkUserName},'%')
+            </if>
+            <if test="startDate != null and startDate!=''">
+                and creationDate &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate!=''">
+                and creationDate &lt;= #{endDate}
+            </if>
+        </trim>
+    </select>
+
+
+
+
+    <select id="getItripHotelOrderListByMap" resultType="cn.itrip.beans.pojo.ItripHotelOrder" parameterType="java.util.Map">
+        select
+                id as id,
+                userId as userId,
+                orderType as orderType,
+                orderNo as orderNo,
+                tradeNo as tradeNo,
+                hotelId as hotelId,
+                hotelName as hotelName,
+                roomId as roomId,
+                count as count,
+                bookingDays as bookingDays,
+                checkInDate as checkInDate,
+                checkOutDate as checkOutDate,
+                orderStatus as orderStatus,
+                payAmount as payAmount,
+                payType as payType,
+                noticePhone as noticePhone,
+                noticeEmail as noticeEmail,
+                specialRequirement as specialRequirement,
+                isNeedInvoice as isNeedInvoice,
+                invoiceType as invoiceType,
+                invoiceHead as invoiceHead,
+                linkUserName as linkUserName,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy,
+                bookType as bookType
+        from itrip_hotel_order
+        <trim prefix="where" prefixOverrides="and | or">
+                    <if test="id != null and id!=''">
+                        and id=#{id}
+                    </if>
+                    <if test="userId != null and userId!=''">
+                        and userId=#{userId}
+                    </if>
+                    <if test="orderType != null">
+                        and orderType=#{orderType}
+                    </if>
+                    <if test="orderNo != null and orderNo!=''">
+                        and orderNo=#{orderNo}
+                    </if>
+                    <if test="tradeNo != null and tradeNo!=''">
+                        and tradeNo=#{tradeNo}
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        and hotelId=#{hotelId}
+                    </if>
+                    <if test="hotelName != null and hotelName!=''">
+                        and hotelName=#{hotelName}
+                    </if>
+                    <if test="roomId != null and roomId!=''">
+                        and roomId=#{roomId}
+                    </if>
+                    <if test="count != null and count!=''">
+                        and count=#{count}
+                    </if>
+                    <if test="bookingDays != null and bookingDays!=''">
+                        and bookingDays=#{bookingDays}
+                    </if>
+                    <if test="checkInDate != null and checkInDate!=''">
+                        and checkInDate=#{checkInDate}
+                    </if>
+                    <if test="checkOutDate != null and checkOutDate!=''">
+                        and checkOutDate=#{checkOutDate}
+                    </if>
+                    <if test="orderStatus != null">
+                        and orderStatus=#{orderStatus}
+                    </if>
+                    <if test="payAmount != null and payAmount!=''">
+                        and payAmount=#{payAmount}
+                    </if>
+                    <if test="payType != null and payType!=''">
+                        and payType=#{payType}
+                    </if>
+                    <if test="noticePhone != null and noticePhone!=''">
+                        and noticePhone=#{noticePhone}
+                    </if>
+                    <if test="noticeEmail != null and noticeEmail!=''">
+                        and noticeEmail=#{noticeEmail}
+                    </if>
+                    <if test="specialRequirement != null and specialRequirement!=''">
+                        and specialRequirement=#{specialRequirement}
+                    </if>
+                    <if test="isNeedInvoice != null and isNeedInvoice!=''">
+                        and isNeedInvoice=#{isNeedInvoice}
+                    </if>
+                    <if test="invoiceType != null and invoiceType!=''">
+                        and invoiceType=#{invoiceType}
+                    </if>
+                    <if test="invoiceHead != null and invoiceHead!=''">
+                        and invoiceHead=#{invoiceHead}
+                    </if>
+                    <if test="linkUserName != null and linkUserName != ''">
+                        and linkUserName like CONCAT ('%',#{linkUserName},'%')
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        and creationDate=#{creationDate}
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        and createdBy=#{createdBy}
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        and modifyDate=#{modifyDate}
+                    </if>
+                    <if test="bookType != null">
+                        and bookType=#{bookType}
+                    </if>
+        </trim>
+         order by creationDate desc
+        <if test="beginPos != null and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripHotelOrderCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_hotel_order
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="userId != null and userId!=''">
+                    and userId=#{userId}
+                </if>
+                <if test="orderType != null">
+                    and orderType=#{orderType}
+                </if>
+                <if test="orderNo != null and orderNo!=''">
+                    and orderNo=#{orderNo}
+                </if>
+                <if test="tradeNo != null and tradeNo!=''">
+                    and tradeNo=#{tradeNo}
+                </if>
+                <if test="hotelId != null and hotelId!=''">
+                    and hotelId=#{hotelId}
+                </if>
+                <if test="hotelName != null and hotelName!=''">
+                    and hotelName=#{hotelName}
+                </if>
+                <if test="roomId != null and roomId!=''">
+                    and roomId=#{roomId}
+                </if>
+                <if test="count != null and count!=''">
+                    and count=#{count}
+                </if>
+                <if test="bookingDays != null and bookingDays!=''">
+                    and bookingDays=#{bookingDays}
+                </if>
+                <if test="checkInDate != null and checkInDate!=''">
+                    and checkInDate=#{checkInDate}
+                </if>
+                <if test="checkOutDate != null and checkOutDate!=''">
+                    and checkOutDate=#{checkOutDate}
+                </if>
+                <if test="orderStatus != null">
+                    and orderStatus=#{orderStatus}
+                </if>
+                <if test="payAmount != null and payAmount!=''">
+                    and payAmount=#{payAmount}
+                </if>
+                <if test="payType != null and payType!=''">
+                    and payType=#{payType}
+                </if>
+                <if test="noticePhone != null and noticePhone!=''">
+                    and noticePhone=#{noticePhone}
+                </if>
+                <if test="noticeEmail != null and noticeEmail!=''">
+                    and noticeEmail=#{noticeEmail}
+                </if>
+                <if test="specialRequirement != null and specialRequirement!=''">
+                    and specialRequirement=#{specialRequirement}
+                </if>
+                <if test="isNeedInvoice != null and isNeedInvoice!=''">
+                    and isNeedInvoice=#{isNeedInvoice}
+                </if>
+                <if test="invoiceType != null and invoiceType!=''">
+                    and invoiceType=#{invoiceType}
+                </if>
+                <if test="invoiceHead != null and invoiceHead!=''">
+                    and invoiceHead=#{invoiceHead}
+                </if>
+                <if test="linkUserName != null and linkUserName != ''">
+                    and linkUserName like CONCAT ('%',#{linkUserName},'%')
+                </if>
+                <if test="creationDate != null and creationDate!=''">
+                    and creationDate=#{creationDate}
+                </if>
+                <if test="createdBy != null and createdBy!=''">
+                    and createdBy=#{createdBy}
+                </if>
+                <if test="modifyDate != null and modifyDate!=''">
+                    and modifyDate=#{modifyDate}
+                </if>
+                <if test="modifiedBy != null and modifiedBy!=''">
+                    and modifiedBy=#{modifiedBy}
+                </if>
+                <if test="bookType != null">
+                    and bookType=#{bookType}
+                </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripHotelOrder" useGeneratedKeys="true" keyProperty="id" parameterType="cn.itrip.beans.pojo.ItripHotelOrder">
+        insert into itrip_hotel_order(
+                        userId,
+                        orderType,
+                        orderNo,
+                        tradeNo,
+                        hotelId,
+                        hotelName,
+                        roomId,
+                        count,
+                        bookingDays,
+                        checkInDate,
+                        checkOutDate,
+                        orderStatus,
+                        payAmount,
+                        payType,
+                        noticePhone,
+                        noticeEmail,
+                        specialRequirement,
+                        isNeedInvoice,
+                        invoiceType,
+                        invoiceHead,
+                        linkUserName,
+                        creationDate,
+                        createdBy,
+                        modifyDate,
+                        modifiedBy,
+                        bookType)
+        values(
+                     #{userId},
+                     #{orderType},
+                     #{orderNo},
+                     #{tradeNo},
+                     #{hotelId},
+                     #{hotelName},
+                     #{roomId},
+                     #{count},
+                     #{bookingDays},
+                     #{checkInDate},
+                     #{checkOutDate},
+                     #{orderStatus},
+                     #{payAmount},
+                     #{payType},
+                     #{noticePhone},
+                     #{noticeEmail},
+                     #{specialRequirement},
+                     #{isNeedInvoice},
+                     #{invoiceType},
+                     #{invoiceHead},
+                     #{linkUserName},
+                     #{creationDate},
+                     #{createdBy},
+                     #{modifyDate},
+                     #{modifiedBy},
+                     #{bookType})
+    </insert>
+
+    <update id="updateItripHotelOrder" parameterType="cn.itrip.beans.pojo.ItripHotelOrder">
+        update itrip_hotel_order
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                    <if test="orderNo != null and orderNo!=''">
+                        orderNo=#{orderNo},
+                    </if>
+                    <if test="tradeNo != null and tradeNo!=''">
+                        tradeNo=#{tradeNo},
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        hotelId=#{hotelId},
+                    </if>
+                    <if test="hotelName != null and hotelName!=''">
+                        hotelName=#{hotelName},
+                    </if>
+                    <if test="roomId != null and roomId!=''">
+                        roomId=#{roomId},
+                    </if>
+                    <if test="count != null and count!=''">
+                        count=#{count},
+                    </if>
+                    <if test="bookingDays != null and bookingDays!=''">
+                        bookingDays=#{bookingDays},
+                    </if>
+                    <if test="checkInDate != null and checkInDate!=''">
+                        checkInDate=#{checkInDate},
+                    </if>
+                    <if test="checkOutDate != null and checkOutDate!=''">
+                        checkOutDate=#{checkOutDate},
+                    </if>
+                    <if test="orderStatus != null">
+                        orderStatus=#{orderStatus},
+                    </if>
+                    <if test="payAmount != null and payAmount!=''">
+                        payAmount=#{payAmount},
+                    </if>
+                    <if test="payType != null">
+                        payType=#{payType},
+                    </if>
+                    <if test="noticePhone != null and noticePhone!=''">
+                        noticePhone=#{noticePhone},
+                    </if>
+                    <if test="noticeEmail != null and noticeEmail!=''">
+                        noticeEmail=#{noticeEmail},
+                    </if>
+                    <if test="specialRequirement != null and specialRequirement!=''">
+                        specialRequirement=#{specialRequirement},
+                    </if>
+                    <if test="isNeedInvoice != null and isNeedInvoice!=''">
+                        isNeedInvoice=#{isNeedInvoice},
+                    </if>
+                    <if test="invoiceType != null and invoiceType!=''">
+                        invoiceType=#{invoiceType},
+                    </if>
+                    <if test="invoiceHead != null and invoiceHead!=''">
+                        invoiceHead=#{invoiceHead},
+                    </if>
+                    <if test="linkUserName != null and linkUserName!=''">
+                        linkUserName=#{linkUserName},
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        creationDate=#{creationDate},
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        createdBy=#{createdBy},
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        modifyDate=#{modifyDate},
+                    </if>
+                    <if test="modifiedBy != null and modifiedBy!=''">
+                        modifiedBy=#{modifiedBy}
+                    </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripHotelOrderById" parameterType="Long">
+        delete from itrip_hotel_order where id = #{id}
+    </delete>
+
+    <update id="flushCancelOrderStatus">
+          update itrip_hotel_order set orderStatus=1 where orderStatus=0 and timestampdiff(SECOND, creationDate, NOW()) >= 2 * 3600
+    </update>
+
+    <update id="flushSuccessOrderStatus">
+        update itrip_hotel_order set orderStatus=3 where orderStatus=2 and timestampdiff(SECOND, checkOutDate, NOW()) >= 0
+    </update>
+
+    <update id="updateHotelOrderStatus" parameterType="Long">
+        update itrip_hotel_order
+          set orderStatus = 4,
+              modifyDate = NOW()
+            <if test="modifiedBy != null and modifiedBy!=''">
+                ,modifiedBy=#{modifiedBy}
+            </if>
+          where id=#{id}
+    </update>
+
+
+</mapper>

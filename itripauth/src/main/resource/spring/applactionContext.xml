@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+      <!--spring配置文件-->
+    <context:component-scan base-package="cn.itrip.auth.Service"/>
+    <!--引用外部配置文件-->
+    <context:property-placeholder location="classpath:database.properties,classpath:sms.properties"/>
+    <!--配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+    <!--配置sqlSessionFactoryBean-->
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--配置数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--引入Mabitis配置文件-->
+        <property name="configLocation" value="classpath:MyBatis-config.xml"/>
+    </bean>
+    <!--采用接口扫描技术-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <property name="basePackage" value="cn.itrip.dao" />
+    </bean>
+    <!--配置声明式事务-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--配置发送短信验证码-->
+    <bean id="systemConfig" class="cn.itrip.common.SystemConfig">
+        <property name="smsAccountSid" value="${smsAccountSid}"></property>
+        <property name="smsAppID" value="${smsAppID}"></property>
+        <property name="smsAuthToken" value="${smsAuthToken}"></property>
+        <property name="smsServerIP" value="${smsServerIP}"></property>
+        <property name="smsServerPort" value="${smsServerPort}"></property>
+    </bean>
+    <!--配置Redis信息-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${maxIdle}"/>
+        <property name="maxTotal" value="${maxTotal}"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+    <!--根据配置获取连接池-->
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg ref="jedisPoolConfig"/>
+        <constructor-arg value="${redisIp}"/>
+        <constructor-arg value="${redisPort}"/>
+        <constructor-arg value="${timeout}"/>
+    </bean>
+    <bean id="redisAPI" class="cn.itrip.common.RedisAPI">
+        <property name="jedisPool" ref="jedisPool"/>
+    </bean>
+    <!--配置邮箱信息-->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <!--配置邮箱主机-->
+        <property name="host" value="${email.host}"/>
+        <!--配置邮箱服务器端口-->
+        <property name="port" value="${email.port}"/>
+        <!--配置邮箱用户名-->
+        <property name="username" value="${email.username}"/>
+        <!--配置邮箱密码-->
+        <property name="password" value="${email.password}"/>
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mial.smtp.auth">${email.auth}</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+                <prop key="mail.smtp.cocketFactory.port">${email.cocketFactory.port}</prop>
+            </props>
+        </property>
+    </bean>
+    <!--发送内容配置-->
+    <bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <!--发送人-->
+       <property name="from" value="${email.username}"/>
+        <!--主题-->
+       <property name="subject" value="【爱旅行】请激活您的账户"/>
+        <!--正文-->
+        <property name="text" value="" />
+    </bean>
+</beans>

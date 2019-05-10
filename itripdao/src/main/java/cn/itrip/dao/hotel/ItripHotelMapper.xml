@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.hotel.ItripHotelMapper">
+
+
+    <select id="getHotelAreaByHotelId" resultType="cn.itrip.beans.pojo.ItripAreaDic" >
+        select
+        a.id as id,
+        (select d.name FROM itrip_area_dic d
+            WHERE d.isActivated=1 AND d.id = a.areaId) AS name
+        from itrip_hotel_trading_area a
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and a.id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getHotelFeatureByHotelId" resultType="cn.itrip.beans.pojo.ItripLabelDic" >
+        SELECT
+            f.id as id,
+            d.name  AS name,
+            d.description as description
+            FROM itrip_hotel_feature f,itrip_label_dic d where f.featureId = d.id
+        <if test="id != null">
+            and f.hotelId=#{id}
+        </if>
+    </select>
+
+    <select id="getItripHotelById" resultType="cn.itrip.beans.pojo.ItripHotel" >
+        select
+        id as id,
+        hotelName as hotelName,
+        countryId as countryId,
+        provinceId as provinceId,
+        cityId as cityId,
+        address as address,
+        details as details,
+        facilities as facilities,
+        hotelPolicy as hotelPolicy,
+        hotelType as hotelType,
+        hotelLevel as hotelLevel,
+        isGroupPurchase as isGroupPurchase,
+        redundantCityName as redundantCityName,
+        redundantProvinceName as redundantProvinceName,
+        redundantCountryName as redundantCountryName,
+        redundantHotelStore as redundantHotelStore,
+        creationDate as creationDate,
+        createdBy as createdBy,
+        modifyDate as modifyDate,
+        modifiedBy as modifiedBy
+        from itrip_hotel
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripHotelFacilitiesById" resultType="cn.itrip.beans.vo.hotel.ItripSearchFacilitiesHotelVO" >
+        select
+        facilities as facilities
+        from itrip_hotel
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="queryHotelPolicy" resultType="cn.itrip.beans.vo.hotel.ItripSearchPolicyHotelVO" >
+        select
+        hotelPolicy as hotelPolicy
+        from itrip_hotel
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+   <!-- <select id="queryHotelDetails" resultMap="hotelDetailsMap" >
+        select
+        '酒店介绍' as name,
+        details as description
+        from itrip_hotel
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+        UNION ALL
+        select
+        NAME,
+        description
+        from itrip_label_dic
+        where parentid = '16'
+        and id in(select featureId from itrip_hotel_feature
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and hotelId=#{id}
+            </if>
+        </trim>
+        )
+    </select>-->
+
+    <resultMap id="hotelDetailsMap" type="cn.itrip.beans.vo.hotel.ItripSearchDetailsHotelVO">
+        <result property="name" column="name" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <select id="getItripHotelListByMap" resultType="cn.itrip.beans.pojo.ItripHotel" parameterType="java.util.Map">
+        select
+        id as id,
+        hotelName as hotelName,
+        countryId as countryId,
+        provinceId as provinceId,
+        cityId as cityId,
+        address as address,
+        details as details,
+        facilities as facilities,
+        hotelPolicy as hotelPolicy,
+        hotelType as hotelType,
+        hotelLevel as hotelLevel,
+        isGroupPurchase as isGroupPurchase,
+        redundantCityName as redundantCityName,
+        redundantProvinceName as redundantProvinceName,
+        redundantCountryName as redundantCountryName,
+        redundantHotelStore as redundantHotelStore,
+        creationDate as creationDate,
+        createdBy as createdBy,
+        modifyDate as modifyDate,
+        modifiedBy as modifiedBy
+        from itrip_hotel
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="hotelName != null and hotelName!=''">
+                and hotelName=#{hotelName}
+            </if>
+            <if test="countryId != null and countryId!=''">
+                and countryId=#{countryId}
+            </if>
+            <if test="provinceId != null and provinceId!=''">
+                and provinceId=#{provinceId}
+            </if>
+            <if test="cityId != null and cityId!=''">
+                and cityId=#{cityId}
+            </if>
+            <if test="address != null and address!=''">
+                and address=#{address}
+            </if>
+            <if test="details != null and details!=''">
+                and details=#{details}
+            </if>
+            <if test="facilities != null and facilities!=''">
+                and facilities=#{facilities}
+            </if>
+            <if test="hotelPolicy != null and hotelPolicy!=''">
+                and hotelPolicy=#{hotelPolicy}
+            </if>
+            <if test="hotelType != null and hotelType!=''">
+                and hotelType=#{hotelType}
+            </if>
+            <if test="hotelLevel != null and hotelLevel!=''">
+                and hotelLevel=#{hotelLevel}
+            </if>
+            <if test="isGroupPurchase != null and isGroupPurchase!=''">
+                and isGroupPurchase=#{isGroupPurchase}
+            </if>
+            <if test="redundantCityName != null and redundantCityName!=''">
+                and redundantCityName=#{redundantCityName}
+            </if>
+            <if test="redundantProvinceName != null and redundantProvinceName!=''">
+                and redundantProvinceName=#{redundantProvinceName}
+            </if>
+            <if test="redundantCountryName != null and redundantCountryName!=''">
+                and redundantCountryName=#{redundantCountryName}
+            </if>
+            <if test="redundantHotelStore != null and redundantHotelStore!=''">
+                and redundantHotelStore=#{redundantHotelStore}
+            </if>
+            <if test="creationDate != null and creationDate!=''">
+                and creationDate=#{creationDate}
+            </if>
+            <if test="createdBy != null and createdBy!=''">
+                and createdBy=#{createdBy}
+            </if>
+            <if test="modifyDate != null and modifyDate!=''">
+                and modifyDate=#{modifyDate}
+            </if>
+        </trim>
+        order by creationDate desc
+        <if test="beginPos != null and beginPos!='' and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripHotelCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_hotel
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="hotelName != null and hotelName!=''">
+                and hotelName=#{hotelName}
+            </if>
+            <if test="countryId != null and countryId!=''">
+                and countryId=#{countryId}
+            </if>
+            <if test="provinceId != null and provinceId!=''">
+                and provinceId=#{provinceId}
+            </if>
+            <if test="cityId != null and cityId!=''">
+                and cityId=#{cityId}
+            </if>
+            <if test="address != null and address!=''">
+                and address=#{address}
+            </if>
+            <if test="details != null and details!=''">
+                and details=#{details}
+            </if>
+            <if test="facilities != null and facilities!=''">
+                and facilities=#{facilities}
+            </if>
+            <if test="hotelPolicy != null and hotelPolicy!=''">
+                and hotelPolicy=#{hotelPolicy}
+            </if>
+            <if test="hotelType != null and hotelType!=''">
+                and hotelType=#{hotelType}
+            </if>
+            <if test="hotelLevel != null and hotelLevel!=''">
+                and hotelLevel=#{hotelLevel}
+            </if>
+            <if test="isGroupPurchase != null and isGroupPurchase!=''">
+                and isGroupPurchase=#{isGroupPurchase}
+            </if>
+            <if test="redundantCityName != null and redundantCityName!=''">
+                and redundantCityName=#{redundantCityName}
+            </if>
+            <if test="redundantProvinceName != null and redundantProvinceName!=''">
+                and redundantProvinceName=#{redundantProvinceName}
+            </if>
+            <if test="redundantCountryName != null and redundantCountryName!=''">
+                and redundantCountryName=#{redundantCountryName}
+            </if>
+            <if test="redundantHotelStore != null and redundantHotelStore!=''">
+                and redundantHotelStore=#{redundantHotelStore}
+            </if>
+            <if test="creationDate != null and creationDate!=''">
+                and creationDate=#{creationDate}
+            </if>
+            <if test="createdBy != null and createdBy!=''">
+                and createdBy=#{createdBy}
+            </if>
+            <if test="modifyDate != null and modifyDate!=''">
+                and modifyDate=#{modifyDate}
+            </if>
+            <if test="modifiedBy != null and modifiedBy!=''">
+                and modifiedBy=#{modifiedBy}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripHotel" parameterType="cn.itrip.beans.pojo.ItripHotel">
+        insert into itrip_hotel(
+        hotelName,
+        countryId,
+        provinceId,
+        cityId,
+        address,
+        details,
+        facilities,
+        hotelPolicy,
+        hotelType,
+        hotelLevel,
+        isGroupPurchase,
+        redundantCityName,
+        redundantProvinceName,
+        redundantCountryName,
+        redundantHotelStore,
+        creationDate,
+        createdBy,
+        modifyDate,
+        modifiedBy)
+        values(
+        #{hotelName},
+        #{countryId},
+        #{provinceId},
+        #{cityId},
+        #{address},
+        #{details},
+        #{facilities},
+        #{hotelPolicy},
+        #{hotelType},
+        #{hotelLevel},
+        #{isGroupPurchase},
+        #{redundantCityName},
+        #{redundantProvinceName},
+        #{redundantCountryName},
+        #{redundantHotelStore},
+        #{creationDate},
+        #{createdBy},
+        #{modifyDate},
+        #{modifiedBy})
+    </insert>
+
+    <update id="updateItripHotel" parameterType="cn.itrip.beans.pojo.ItripHotel">
+        update itrip_hotel
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+            <if test="id != null and id!=''">
+                id=#{id},
+            </if>
+            <if test="hotelName != null and hotelName!=''">
+                hotelName=#{hotelName},
+            </if>
+            <if test="countryId != null and countryId!=''">
+                countryId=#{countryId},
+            </if>
+            <if test="provinceId != null and provinceId!=''">
+                provinceId=#{provinceId},
+            </if>
+            <if test="cityId != null and cityId!=''">
+                cityId=#{cityId},
+            </if>
+            <if test="address != null and address!=''">
+                address=#{address},
+            </if>
+            <if test="details != null and details!=''">
+                details=#{details},
+            </if>
+            <if test="facilities != null and facilities!=''">
+                facilities=#{facilities},
+            </if>
+            <if test="hotelPolicy != null and hotelPolicy!=''">
+                hotelPolicy=#{hotelPolicy},
+            </if>
+            <if test="hotelType != null and hotelType!=''">
+                hotelType=#{hotelType},
+            </if>
+            <if test="hotelLevel != null and hotelLevel!=''">
+                hotelLevel=#{hotelLevel},
+            </if>
+            <if test="isGroupPurchase != null and isGroupPurchase!=''">
+                isGroupPurchase=#{isGroupPurchase},
+            </if>
+            <if test="redundantCityName != null and redundantCityName!=''">
+                redundantCityName=#{redundantCityName},
+            </if>
+            <if test="redundantProvinceName != null and redundantProvinceName!=''">
+                redundantProvinceName=#{redundantProvinceName},
+            </if>
+            <if test="redundantCountryName != null and redundantCountryName!=''">
+                redundantCountryName=#{redundantCountryName},
+            </if>
+            <if test="redundantHotelStore != null and redundantHotelStore!=''">
+                redundantHotelStore=#{redundantHotelStore},
+            </if>
+            <if test="creationDate != null and creationDate!=''">
+                creationDate=#{creationDate},
+            </if>
+            <if test="createdBy != null and createdBy!=''">
+                createdBy=#{createdBy},
+            </if>
+            <if test="modifyDate != null and modifyDate!=''">
+                modifyDate=#{modifyDate},
+            </if>
+            <if test="modifiedBy != null and modifiedBy!=''">
+                modifiedBy=#{modifiedBy}
+            </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripHotelById" parameterType="Long">
+        delete from itrip_hotel where id = #{id}
+    </delete>
+</mapper>

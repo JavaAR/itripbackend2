@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.hotelextendproperty.ItripHotelExtendPropertyMapper">
+
+    <select id="getItripHotelExtendPropertyById" resultType="cn.itrip.beans.pojo.ItripHotelExtendProperty" >
+        select
+                id as id,
+                hotelId as hotelId,
+                extendPropertyId as extendPropertyId,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_hotel_extend_property
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripHotelExtendPropertyListByMap" resultType="cn.itrip.beans.pojo.ItripHotelExtendProperty" parameterType="java.util.Map">
+        select
+                id as id,
+                hotelId as hotelId,
+                extendPropertyId as extendPropertyId,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_hotel_extend_property
+        <trim prefix="where" prefixOverrides="and | or">
+                    <if test="id != null and id!=''">
+                        and id=#{id}
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        and hotelId=#{hotelId}
+                    </if>
+                    <if test="extendPropertyId != null and extendPropertyId!=''">
+                        and extendPropertyId=#{extendPropertyId}
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        and creationDate=#{creationDate}
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        and createdBy=#{createdBy}
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        and modifyDate=#{modifyDate}
+                    </if>
+        </trim>
+         order by creationDate desc
+        <if test="beginPos != null and beginPos!='' and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripHotelExtendPropertyCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_hotel_extend_property
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="hotelId != null and hotelId!=''">
+                    and hotelId=#{hotelId}
+                </if>
+                <if test="extendPropertyId != null and extendPropertyId!=''">
+                    and extendPropertyId=#{extendPropertyId}
+                </if>
+                <if test="creationDate != null and creationDate!=''">
+                    and creationDate=#{creationDate}
+                </if>
+                <if test="createdBy != null and createdBy!=''">
+                    and createdBy=#{createdBy}
+                </if>
+                <if test="modifyDate != null and modifyDate!=''">
+                    and modifyDate=#{modifyDate}
+                </if>
+                <if test="modifiedBy != null and modifiedBy!=''">
+                    and modifiedBy=#{modifiedBy}
+                </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripHotelExtendProperty" parameterType="cn.itrip.beans.pojo.ItripHotelExtendProperty">
+        insert into itrip_hotel_extend_property(
+                        hotelId,
+                        extendPropertyId,
+                        creationDate,
+                        createdBy,
+                        modifyDate,
+                        modifiedBy)
+        values(
+                     #{hotelId},
+                     #{extendPropertyId},
+                     #{creationDate},
+                     #{createdBy},
+                     #{modifyDate},
+                    #{modifiedBy})
+    </insert>
+
+    <update id="updateItripHotelExtendProperty" parameterType="cn.itrip.beans.pojo.ItripHotelExtendProperty">
+        update itrip_hotel_extend_property
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                    <if test="id != null and id!=''">
+                        id=#{id},
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        hotelId=#{hotelId},
+                    </if>
+                    <if test="extendPropertyId != null and extendPropertyId!=''">
+                        extendPropertyId=#{extendPropertyId},
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        creationDate=#{creationDate},
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        createdBy=#{createdBy},
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        modifyDate=#{modifyDate},
+                    </if>
+                    <if test="modifiedBy != null and modifiedBy!=''">
+                        modifiedBy=#{modifiedBy}
+                    </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripHotelExtendPropertyById" parameterType="Long">
+        delete from itrip_hotel_extend_property where id = #{id}
+    </delete>
+</mapper>

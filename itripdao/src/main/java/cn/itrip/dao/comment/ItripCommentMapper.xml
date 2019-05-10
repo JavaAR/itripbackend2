@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.comment.ItripCommentMapper">
+
+    <select id="getItripCommentById" resultType="cn.itrip.beans.pojo.ItripComment">
+        select
+                id as id,
+                hotelId as hotelId,
+                productId as productId,
+                orderId as orderId,
+                productType as productType,
+                content as content,
+                userId as userId,
+                isHavingImg as isHavingImg,
+                positionScore as positionScore,
+                facilitiesScore as facilitiesScore,
+                serviceScore as serviceScore,
+                hygieneScore as hygieneScore,
+                score as score,
+                tripMode as tripMode,
+                isOk as isOk,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_comment
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripCommentListByMap" resultType="cn.itrip.beans.vo.comment.ItripListCommentVO" parameterType="java.util.Map">
+        select
+            id AS id,
+            hotelId AS hotelId,
+            (SELECT h.hotelName FROM itrip_hotel h WHERE  id =  hotelId) AS hotelName,
+            productId AS productId,
+            (SELECT r.roomTitle FROM itrip_hotel_room r WHERE  id =  productId) AS roomTitle,
+            content AS content,
+            userId AS userId,
+            (SELECT u.userCode FROM itrip_user u WHERE  id =  userId) AS userCode,
+            isHavingImg AS isHavingImg,
+            score AS score,
+            tripMode AS tripMode,
+            (SELECT d.name FROM itrip_label_dic d WHERE  id =  tripMode) AS tripModeName,
+            orderId,
+            (SELECT o.checkInDate FROM itrip_hotel_order o WHERE  id =  orderId) AS checkInDate,
+            creationDate AS creationDate,
+            createdBy AS createdBy
+        from itrip_comment
+        <trim prefix="where" prefixOverrides="and | or">
+                    <if test="id != null and id!=''">
+                        and id=#{id}
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        and hotelId=#{hotelId}
+                    </if>
+                    <if test="productId != null and productId!=''">
+                        and productId=#{productId}
+                    </if>
+                    <if test="orderId != null and orderId!=''">
+                        and orderId=#{orderId}
+                    </if>
+                    <if test="productType != null and productType!=''">
+                        and productType=#{productType}
+                    </if>
+                    <if test="content != null and content!=''">
+                        and content=#{content}
+                    </if>
+                    <if test="userId != null and userId!=''">
+                        and userId=#{userId}
+                    </if>
+                    <if test="isHavingImg != null">
+                        and isHavingImg=#{isHavingImg}
+                    </if>
+                    <if test="positionScore != null and positionScore!=''">
+                        and positionScore=#{positionScore}
+                    </if>
+                    <if test="facilitiesScore != null and facilitiesScore!=''">
+                        and facilitiesScore=#{facilitiesScore}
+                    </if>
+                    <if test="serviceScore != null and serviceScore!=''">
+                        and serviceScore=#{serviceScore}
+                    </if>
+                    <if test="hygieneScore != null and hygieneScore!=''">
+                        and hygieneScore=#{hygieneScore}
+                    </if>
+                    <if test="score != null and score!=''">
+                        and score=#{score}
+                    </if>
+                    <if test="tripMode != null and tripMode!=''">
+                        and tripMode=#{tripMode}
+                    </if>
+                    <if test="isOk != null">
+                        and isOk=#{isOk}
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        and creationDate=#{creationDate}
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        and createdBy=#{createdBy}
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        and modifyDate=#{modifyDate}
+                    </if>
+        </trim>
+         order by creationDate desc
+        <if test="beginPos != null and pageSize != null and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripCommentCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_comment
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="hotelId != null and hotelId!=''">
+                    and hotelId=#{hotelId}
+                </if>
+                <if test="productId != null and productId!=''">
+                    and productId=#{productId}
+                </if>
+                <if test="orderId != null and orderId!=''">
+                    and orderId=#{orderId}
+                </if>
+                <if test="productType != null and productType!=''">
+                    and productType=#{productType}
+                </if>
+                <if test="content != null and content!=''">
+                    and content=#{content}
+                </if>
+                <if test="userId != null and userId!=''">
+                    and userId=#{userId}
+                </if>
+                <if test="isHavingImg != null">
+                    and isHavingImg=#{isHavingImg}
+                </if>
+                <if test="positionScore != null and positionScore!=''">
+                    and positionScore=#{positionScore}
+                </if>
+                <if test="facilitiesScore != null and facilitiesScore!=''">
+                    and facilitiesScore=#{facilitiesScore}
+                </if>
+                <if test="serviceScore != null and serviceScore!=''">
+                    and serviceScore=#{serviceScore}
+                </if>
+                <if test="hygieneScore != null and hygieneScore!=''">
+                    and hygieneScore=#{hygieneScore}
+                </if>
+                <if test="score != null and score!=''">
+                    and score=#{score}
+                </if>
+                <if test="tripMode != null and tripMode!=''">
+                    and tripMode=#{tripMode}
+                </if>
+                <if test="isOk != null">
+                    and isOk=#{isOk}
+                </if>
+                <if test="creationDate != null and creationDate!=''">
+                    and creationDate=#{creationDate}
+                </if>
+                <if test="createdBy != null and createdBy!=''">
+                    and createdBy=#{createdBy}
+                </if>
+                <if test="modifyDate != null and modifyDate!=''">
+                    and modifyDate=#{modifyDate}
+                </if>
+                <if test="modifiedBy != null and modifiedBy!=''">
+                    and modifiedBy=#{modifiedBy}
+                </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripComment" useGeneratedKeys="true" keyProperty="id" parameterType="cn.itrip.beans.pojo.ItripComment">
+        insert into itrip_comment(
+                        hotelId,
+                        productId,
+                        orderId,
+                        productType,
+                        content,
+                        userId,
+                        isHavingImg,
+                        positionScore,
+                        facilitiesScore,
+                        serviceScore,
+                        hygieneScore,
+                        score,
+                        tripMode,
+                        isOk,
+                        creationDate,
+                        createdBy,
+                        modifyDate,
+                        modifiedBy)
+        values(
+                     #{hotelId},
+                     #{productId},
+                     #{orderId},
+                     #{productType},
+                     #{content},
+                     #{userId},
+                     #{isHavingImg},
+                     #{positionScore},
+                     #{facilitiesScore},
+                     #{serviceScore},
+                     #{hygieneScore},
+                     #{score},
+                     #{tripMode},
+                     #{isOk},
+                     #{creationDate},
+                     #{createdBy},
+                     #{modifyDate},
+                    #{modifiedBy})
+    </insert>
+
+    <update id="updateItripComment" parameterType="cn.itrip.beans.pojo.ItripComment">
+        update itrip_comment
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                    <if test="id != null and id!=''">
+                        id=#{id},
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        hotelId=#{hotelId},
+                    </if>
+                    <if test="productId != null and productId!=''">
+                        productId=#{productId},
+                    </if>
+                    <if test="orderId != null and orderId!=''">
+                        orderId=#{orderId},
+                    </if>
+                    <if test="productType != null and productType!=''">
+                        productType=#{productType},
+                    </if>
+                    <if test="content != null and content!=''">
+                        content=#{content},
+                    </if>
+                    <if test="userId != null and userId!=''">
+                        userId=#{userId},
+                    </if>
+                    <if test="isHavingImg != null and isHavingImg != ''">
+                        isHavingImg=#{isHavingImg},
+                    </if>
+                    <if test="positionScore != null and positionScore!=''">
+                        positionScore=#{positionScore},
+                    </if>
+                    <if test="facilitiesScore != null and facilitiesScore!=''">
+                        facilitiesScore=#{facilitiesScore},
+                    </if>
+                    <if test="serviceScore != null and serviceScore!=''">
+                        serviceScore=#{serviceScore},
+                    </if>
+                    <if test="hygieneScore != null and hygieneScore!=''">
+                        hygieneScore=#{hygieneScore},
+                    </if>
+                    <if test="score != null and score!=''">
+                        score=#{score},
+                    </if>
+                    <if test="tripMode != null and tripMode!=''">
+                        tripMode=#{tripMode},
+                    </if>
+                    <if test="isOk != null and isOk != ''">
+                        isOk=#{isOk},
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        creationDate=#{creationDate},
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        createdBy=#{createdBy},
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        modifyDate=#{modifyDate},
+                    </if>
+                    <if test="modifiedBy != null and modifiedBy!=''">
+                        modifiedBy=#{modifiedBy}
+                    </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripCommentById" parameterType="Long">
+        delete from itrip_comment where id = #{id}
+    </delete>
+
+    <select id="getCommentAvgScore" resultType="cn.itrip.beans.vo.comment.ItripScoreCommentVO" parameterType="Long">
+        SELECT
+        ROUND(AVG(positionScore),1) AS avgPositionScore,
+        ROUND(AVG(facilitiesScore),1) AS avgFacilitiesScore,
+        ROUND(AVG(serviceScore),1) AS avgServiceScore,
+        ROUND(AVG(hygieneScore),1) AS avgHygieneScore,
+        ROUND(AVG(score),1) AS avgScore
+        FROM itrip_comment
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="hotelId != null">
+                and hotelId=#{hotelId}
+            </if>
+        </trim>
+    </select>
+</mapper>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.hotelroom.ItripHotelRoomMapper">
+
+    <select id="getItripHotelRoomById" resultType="cn.itrip.beans.pojo.ItripHotelRoom">
+        select
+        id as id,
+        hotelId as hotelId,
+        roomTitle as roomTitle,
+        roomPrice as roomPrice,
+        roomBedTypeId as roomBedTypeId,
+        isHavingBreakfast as isHavingBreakfast,
+        payType as payType,
+        satisfaction as satisfaction,
+        isBook as isBook,
+        isCancel as isCancel,
+        isTimelyResponse as isTimelyResponse,
+        creationDate as creationDate,
+        createdBy as createdBy,
+        modifyDate as modifyDate,
+        modifiedBy as modifiedBy
+        from itrip_hotel_room
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripHotelRoomListByMap" resultType="cn.itrip.beans.vo.hotelroom.ItripHotelRoomVO"
+            parameterType="java.util.Map">
+            select
+                id as id,
+                hotelId as hotelId,
+                roomTitle as roomTitle,
+                roomPrice as roomPrice,
+                roomBedTypeId as roomBedTypeId,
+                isHavingBreakfast as isHavingBreakfast,
+                payType as payType,
+                satisfaction as satisfaction,
+                isBook as isBook,
+                isCancel as isCancel,
+                isTimelyResponse as isTimelyResponse
+            from itrip_hotel_room room
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="hotelId != null and hotelId!=''">
+                and hotelId=#{hotelId}
+            </if>
+            <if test="roomBedTypeId != null">
+                and roomBedTypeId=#{roomBedTypeId}
+            </if>
+            <if test="isHavingBreakfast != null">
+                and isHavingBreakfast=#{isHavingBreakfast}
+            </if>
+            <if test="payType == 1">
+                and (payType=1 or payType=3)
+            </if>
+            <if test="payType == 2">
+                and (payType=2 or payType=3)
+            </if>
+            <if test="payType == 3">
+                and payType=3
+            </if>
+            <if test="isBook != null">
+                and isBook=#{isBook}
+            </if>
+            <if test="isCancel != null">
+                and isCancel=#{isCancel}
+            </if>
+            <if test="isTimelyResponse != null">
+                and isTimelyResponse=#{isTimelyResponse}
+            </if>
+            <if test="timesList!=null and timesList!=''">
+                AND
+                <foreach item="item" index="index" collection="timesList" open="(" separator="AND" close=")">
+                    (
+                        (SELECT store FROM	itrip_hotel_temp_store	WHERE	roomId = room.id AND date_format(recordDate, '%Y-%m-%d') = date_format(#{item}, '%Y-%m-%d')) IS NULL
+                    OR
+                        (SELECT	store FROM	itrip_hotel_temp_store	WHERE roomId = room.id	AND date_format(recordDate, '%Y-%m-%d') = date_format(#{item}, '%Y-%m-%d')) > 0
+                    )
+                </foreach>
+            </if>
+        </trim>
+        order by creationDate desc
+        <if test="beginPos != null and beginPos!='' and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripHotelRoomCountByMap" resultType="Integer" parameterType="java.util.Map">
+        select count(*) from itrip_hotel_room
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="hotelId != null and hotelId!=''">
+                and hotelId=#{hotelId}
+            </if>
+            <if test="roomTitle != null and roomTitle!=''">
+                and roomTitle=#{roomTitle}
+            </if>
+            <if test="roomPrice != null and roomPrice!=''">
+                and roomPrice=#{roomPrice}
+            </if>
+            <if test="roomBedTypeId != null and roomBedTypeId!=''">
+                and roomBedTypeId=#{roomBedTypeId}
+            </if>
+            <if test="isHavingBreakfast != null and isHavingBreakfast!=''">
+                and isHavingBreakfast=#{isHavingBreakfast}
+            </if>
+            <if test="payType != null and payType!=''">
+                and payType=#{payType}
+            </if>
+            <if test="satisfaction != null and satisfaction!=''">
+                and satisfaction=#{satisfaction}
+            </if>
+            <if test="isBook != null and isBook!=''">
+                and isBook=#{isBook}
+            </if>
+            <if test="isCancel != null and isCancel!=''">
+                and isCancel=#{isCancel}
+            </if>
+            <if test="isTimelyResponse != null and isTimelyResponse!=''">
+                and isTimelyResponse=#{isTimelyResponse}
+            </if>
+            <if test="creationDate != null and creationDate!=''">
+                and creationDate=#{creationDate}
+            </if>
+            <if test="createdBy != null and createdBy!=''">
+                and createdBy=#{createdBy}
+            </if>
+            <if test="modifyDate != null and modifyDate!=''">
+                and modifyDate=#{modifyDate}
+            </if>
+            <if test="modifiedBy != null and modifiedBy!=''">
+                and modifiedBy=#{modifiedBy}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripHotelRoom" parameterType="cn.itrip.beans.pojo.ItripHotelRoom">
+        insert into itrip_hotel_room(
+                        hotelId,
+                        roomTitle,
+                        roomPrice,
+                        roomBedTypeId,
+                        isHavingBreakfast,
+                        payType,
+                        satisfaction,
+                        isBook,
+                        isCancel,
+                        isTimelyResponse,
+                        creationDate,
+                        createdBy,
+                        modifyDate,
+                        modifiedBy)
+        values(
+                     #{hotelId},
+                     #{roomTitle},
+                     #{roomPrice},
+                     #{roomBedTypeId},
+                     #{isHavingBreakfast},
+                     #{payType},
+                     #{satisfaction},
+                     #{isBook},
+                     #{isCancel},
+                     #{isTimelyResponse},
+                     #{creationDate},
+                     #{createdBy},
+                     #{modifyDate},
+                    #{modifiedBy})
+    </insert>
+
+    <update id="updateItripHotelRoom" parameterType="cn.itrip.beans.pojo.ItripHotelRoom">
+        update itrip_hotel_room
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+            <if test="id != null and id!=''">
+                id=#{id},
+            </if>
+            <if test="hotelId != null and hotelId!=''">
+                hotelId=#{hotelId},
+            </if>
+            <if test="roomTitle != null and roomTitle!=''">
+                roomTitle=#{roomTitle},
+            </if>
+            <if test="roomPrice != null and roomPrice!=''">
+                roomPrice=#{roomPrice},
+            </if>
+            <if test="roomBedTypeId != null and roomBedTypeId!=''">
+                roomBedTypeId=#{roomBedTypeId},
+            </if>
+            <if test="isHavingBreakfast != null and isHavingBreakfast!=''">
+                isHavingBreakfast=#{isHavingBreakfast},
+            </if>
+            <if test="payType != null and payType!=''">
+                payType=#{payType},
+            </if>
+            <if test="satisfaction != null and satisfaction!=''">
+                satisfaction=#{satisfaction},
+            </if>
+            <if test="isBook != null and isBook!=''">
+                isBook=#{isBook},
+            </if>
+            <if test="isCancel != null and isCancel!=''">
+                isCancel=#{isCancel},
+            </if>
+            <if test="isTimelyResponse != null and isTimelyResponse!=''">
+                isTimelyResponse=#{isTimelyResponse},
+            </if>
+            <if test="creationDate != null and creationDate!=''">
+                creationDate=#{creationDate},
+            </if>
+            <if test="createdBy != null and createdBy!=''">
+                createdBy=#{createdBy},
+            </if>
+            <if test="modifyDate != null and modifyDate!=''">
+                modifyDate=#{modifyDate},
+            </if>
+            <if test="modifiedBy != null and modifiedBy!=''">
+                modifiedBy=#{modifiedBy}
+            </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripHotelRoomById" parameterType="Long">
+        delete from itrip_hotel_room where id = #{id}
+    </delete>
+</mapper>

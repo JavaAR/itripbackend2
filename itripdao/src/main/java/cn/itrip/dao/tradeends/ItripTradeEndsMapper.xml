@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.tradeends.ItripTradeEndsMapper">
+
+    <select id="getItripTradeEndsById" resultType="cn.itrip.beans.pojo.ItripTradeEnds">
+        select
+        id as id,
+        orderNo as orderNo,
+        flag as flag
+        from itrip_trade_ends
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripTradeEndsListByMap" resultType="cn.itrip.beans.pojo.ItripTradeEnds"
+            parameterType="java.util.Map">
+        select
+        id as id,
+        orderNo as orderNo,
+        flag as flag
+        from itrip_trade_ends
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="orderNo != null and orderNo!=''">
+                and orderNo=#{orderNo}
+            </if>
+        </trim>
+        <if test="beginPos != null and beginPos!='' and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripTradeEndsCountByMap" resultType="Integer" parameterType="java.util.Map">
+        select count(*) from itrip_trade_ends
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="orderNo != null and orderNo!=''">
+                and orderNo=#{orderNo}
+            </if>
+            <if test="flag != null and flag!=''">
+                and flag=#{flag}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripTradeEnds" parameterType="cn.itrip.beans.pojo.ItripTradeEnds">
+        insert into itrip_trade_ends(id,orderNo) values(#{id},#{orderNo})
+    </insert>
+
+    <update id="updateItripTradeEnds" parameterType="java.util.Map">
+        update itrip_trade_ends set flag=#{flag} where flag=#{oldFlag}
+    </update>
+
+    <delete id="deleteItripTradeEndsById" parameterType="Long">
+        delete from itrip_trade_ends where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.hoteltempstore.ItripHotelTempStoreMapper">
+
+    <select id="getItripHotelTempStoreById" resultType="cn.itrip.beans.pojo.ItripHotelTempStore" >
+        select
+                id as id,
+                hotelId as hotelId,
+                roomId as roomId,
+                recordDate as recordDate,
+                store as store,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_hotel_temp_store
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripHotelTempStoreListByMap" resultType="cn.itrip.beans.pojo.ItripHotelTempStore" parameterType="java.util.Map">
+        select
+                id as id,
+                hotelId as hotelId,
+                roomId as roomId,
+                recordDate as recordDate,
+                store as store,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_hotel_temp_store
+        <trim prefix="where" prefixOverrides="and | or">
+                    <if test="id != null and id!=''">
+                        and id=#{id}
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        and hotelId=#{hotelId}
+                    </if>
+                    <if test="roomId != null and roomId!=''">
+                        and roomId=#{roomId}
+                    </if>
+                    <if test="recordDate != null and recordDate!=''">
+                        and recordDate=#{recordDate}
+                    </if>
+                    <if test="store != null and store!=''">
+                        and store=#{store}
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        and creationDate=#{creationDate}
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        and createdBy=#{createdBy}
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        and modifyDate=#{modifyDate}
+                    </if>
+        </trim>
+         order by creationDate desc
+        <if test="beginPos != null and beginPos!='' and pageSize != null  and pageSize !='' ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItripHotelTempStoreCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_hotel_temp_store
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="hotelId != null and hotelId!=''">
+                    and hotelId=#{hotelId}
+                </if>
+                <if test="roomId != null and roomId!=''">
+                    and roomId=#{roomId}
+                </if>
+                <if test="recordDate != null and recordDate!=''">
+                    and recordDate=#{recordDate}
+                </if>
+                <if test="store != null and store!=''">
+                    and store=#{store}
+                </if>
+                <if test="creationDate != null and creationDate!=''">
+                    and creationDate=#{creationDate}
+                </if>
+                <if test="createdBy != null and createdBy!=''">
+                    and createdBy=#{createdBy}
+                </if>
+                <if test="modifyDate != null and modifyDate!=''">
+                    and modifyDate=#{modifyDate}
+                </if>
+                <if test="modifiedBy != null and modifiedBy!=''">
+                    and modifiedBy=#{modifiedBy}
+                </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripHotelTempStore" parameterType="cn.itrip.beans.pojo.ItripHotelTempStore">
+        insert into itrip_hotel_temp_store(
+                        hotelId,
+                        roomId,
+                        recordDate,
+                        store,
+                        creationDate,
+                        createdBy,
+                        modifyDate,
+                        modifiedBy)
+        values(
+                     #{hotelId},
+                     #{roomId},
+                     #{recordDate},
+                     #{store},
+                     #{creationDate},
+                     #{createdBy},
+                     #{modifyDate},
+                    #{modifiedBy})
+    </insert>
+
+    <update id="updateItripHotelTempStore" parameterType="cn.itrip.beans.pojo.ItripHotelTempStore">
+        update itrip_hotel_temp_store
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                    <if test="id != null and id!=''">
+                        id=#{id},
+                    </if>
+                    <if test="hotelId != null and hotelId!=''">
+                        hotelId=#{hotelId},
+                    </if>
+                    <if test="roomId != null and roomId!=''">
+                        roomId=#{roomId},
+                    </if>
+                    <if test="recordDate != null and recordDate!=''">
+                        recordDate=#{recordDate},
+                    </if>
+                    <if test="store != null and store!=''">
+                        store=#{store},
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        creationDate=#{creationDate},
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        createdBy=#{createdBy},
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        modifyDate=#{modifyDate},
+                    </if>
+                    <if test="modifiedBy != null and modifiedBy!=''">
+                        modifiedBy=#{modifiedBy}
+                    </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripHotelTempStoreById" parameterType="Long">
+        delete from itrip_hotel_temp_store where id = #{id}
+    </delete>
+
+    <update  id="flushStore" parameterType="java.util.Map" statementType="CALLABLE">
+        {call pre_flush_store(
+            #{startTime,jdbcType=DATE,mode=IN},
+            #{endTime,jdbcType=DATE,mode=IN},
+            #{roomId,jdbcType=BIGINT,mode=IN},
+            #{hotelId,jdbcType=BIGINT,mode=IN}
+          )
+        }
+    </update >
+
+    <select id="queryRoomStore" resultType="cn.itrip.beans.vo.store.StoreVO"  parameterType="java.util.Map">
+              SELECT A.roomId,A.recordDate,A.store from (
+              SELECT
+                    store.roomId,
+                    store.recordDate,
+                    DATE_FORMAT(store.recordDate,'%Y-%m-%d'),
+	                store.store - (
+                            CASE
+                            WHEN SUM(ord.count) IS NULL THEN
+                                0
+                            ELSE
+                                SUM(ord.count)
+                            END
+	                ) AS store
+                    FROM
+                        itrip_hotel_temp_store store
+                    LEFT JOIN itrip_hotel_order ord ON store.roomId = ord.roomId AND ord.orderStatus = 0
+                    AND DATE_FORMAT(store.recordDate,'%Y-%m-%d') BETWEEN DATE_FORMAT(ord.checkInDate, '%Y-%m-%d') AND DATE_FORMAT(ord.checkOutDate,'%Y-%m-%d')
+                    WHERE   store.roomId = #{roomId}
+                    GROUP BY  store.roomId,store.recordDate) AS A
+                    WHERE  A.recordDate BETWEEN DATE_FORMAT(#{startTime}, '%Y-%m-%d') AND DATE_FORMAT(#{endTime}, '%Y-%m-%d') ORDER by A.store ASC
+    </select>
+
+
+    <update id="updateRoomStore" parameterType="java.util.Map">
+        update itrip_hotel_temp_store set  store=store-#{count}
+        WHERE
+            roomId=#{roomId}
+        AND
+            DATE_FORMAT(recordDate, '%Y-%m-%d ')
+        BETWEEN
+            DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+        AND
+            DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+    </update>
+</mapper>

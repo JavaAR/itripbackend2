@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itrip.dao.userlinkuser.ItripUserLinkUserMapper">
+
+    <select id="getItripUserLinkUserById" resultType="cn.itrip.beans.pojo.ItripUserLinkUser" >
+        select
+                id as id,
+                linkUserName as linkUserName,
+                linkIdCardType as linkIdCardType,
+                linkIdCard as linkIdCard,
+                linkPhone as linkPhone,
+                userId as userId,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_user_link_user
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripUserLinkUserByUserId" resultType="cn.itrip.beans.pojo.ItripUserLinkUser" >
+        select
+                id as id,
+                linkUserName as linkUserName,
+                linkIdCardType as linkIdCardType,
+                linkIdCard as linkIdCard,
+                linkPhone as linkPhone,
+                userId as userId,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_user_link_user
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="userId != null">
+                and userId=#{userId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getItripUserLinkUserListByMap" resultType="cn.itrip.beans.pojo.ItripUserLinkUser" parameterType="java.util.Map">
+        select
+                id as id,
+                linkUserName as linkUserName,
+                linkIdCardType as linkIdCardType,
+                linkIdCard as linkIdCard,
+                linkPhone as linkPhone,
+                userId as userId,
+                creationDate as creationDate,
+                createdBy as createdBy,
+                modifyDate as modifyDate,
+                modifiedBy as modifiedBy
+        from itrip_user_link_user
+        <trim prefix="where" prefixOverrides="and | or">
+                    <if test="id != null and id!=''">
+                        and id=#{id}
+                    </if>
+                    <if test="linkUserName != null and linkUserName != ''">
+                        and linkUserName like CONCAT ('%',#{linkUserName},'%')
+                    </if>
+                    <if test="linkIdCard != null and linkIdCard!=''">
+                        and linkIdCard=#{linkIdCard}
+                    </if>
+                    <if test="linkPhone != null and linkPhone!=''">
+                        and linkPhone=#{linkPhone}
+                    </if>
+                    <if test="userId != null and userId!=''">
+                        and userId=#{userId}
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        and creationDate=#{creationDate}
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        and createdBy=#{createdBy}
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        and modifyDate=#{modifyDate}
+                    </if>
+        </trim>
+         order by creationDate desc
+    </select>
+
+    <select id="getItripUserLinkUserCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from itrip_user_link_user
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="linkUserName != null and linkUserName!=''">
+                    and linkUserName=#{linkUserName}
+                </if>
+                <if test="linkIdCard != null and linkIdCard!=''">
+                    and linkIdCard=#{linkIdCard}
+                </if>
+                <if test="linkPhone != null and linkPhone!=''">
+                    and linkPhone=#{linkPhone}
+                </if>
+                <if test="userId != null and userId!=''">
+                    and userId=#{userId}
+                </if>
+                <if test="creationDate != null and creationDate!=''">
+                    and creationDate=#{creationDate}
+                </if>
+                <if test="createdBy != null and createdBy!=''">
+                    and createdBy=#{createdBy}
+                </if>
+                <if test="modifyDate != null and modifyDate!=''">
+                    and modifyDate=#{modifyDate}
+                </if>
+                <if test="modifiedBy != null and modifiedBy!=''">
+                    and modifiedBy=#{modifiedBy}
+                </if>
+        </trim>
+    </select>
+
+    <insert id="insertItripUserLinkUser" parameterType="cn.itrip.beans.pojo.ItripUserLinkUser">
+        insert into itrip_user_link_user(
+                        linkUserName,
+                        linkIdCardType,
+                        linkIdCard,
+                        linkPhone,
+                        userId,
+                        creationDate,
+                        createdBy,
+                        modifyDate,
+                        modifiedBy)
+        values(
+                     #{linkUserName},
+                     #{linkIdCardType},
+                     #{linkIdCard},
+                     #{linkPhone},
+                     #{userId},
+                     #{creationDate},
+                     #{createdBy},
+                     #{modifyDate},
+                    #{modifiedBy})
+    </insert>
+
+    <update id="updateItripUserLinkUser" parameterType="cn.itrip.beans.pojo.ItripUserLinkUser">
+        update itrip_user_link_user
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                    <if test="id != null and id!=''">
+                        id=#{id},
+                    </if>
+                    <if test="linkUserName != null and linkUserName!=''">
+                        linkUserName=#{linkUserName},
+                    </if>
+                    <if test="linkIdCard != null and linkIdCard!=''">
+                        linkIdCardType=#{linkIdCardType},
+                    </if> <if test="linkIdCard != null and linkIdCard!=''">
+                        linkIdCard=#{linkIdCard},
+                    </if>
+                    <if test="linkPhone != null and linkPhone!=''">
+                        linkPhone=#{linkPhone},
+                    </if>
+                    <if test="userId != null and userId!=''">
+                        userId=#{userId},
+                    </if>
+                    <if test="creationDate != null and creationDate!=''">
+                        creationDate=#{creationDate},
+                    </if>
+                    <if test="createdBy != null and createdBy!=''">
+                        createdBy=#{createdBy},
+                    </if>
+                    <if test="modifyDate != null and modifyDate!=''">
+                        modifyDate=#{modifyDate},
+                    </if>
+                    <if test="modifiedBy != null and modifiedBy!=''">
+                        modifiedBy=#{modifiedBy}
+                    </if>
+        </trim>
+    </update>
+
+    <delete id="deleteItripUserLinkUserByIds" parameterType="Long">
+        delete from itrip_user_link_user where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
