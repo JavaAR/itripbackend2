@@ -21,7 +21,7 @@
     <properties>
         <!-- 整个项目统一字符集编码 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.2.4.RELEASE</spring.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
         <mybatis.version>3.2.7</mybatis.version>
         <mysql.connector.java.version>5.1.8</mysql.connector.java.version>
         <jackson.verson>2.8.7</jackson.verson>
